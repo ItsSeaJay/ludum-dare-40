@@ -1,9 +1,10 @@
 extends Node2D
 
+# Movement
 var transform = get_transform()
-var speed = 32
+var speed = 64
 var torque = 4	# How far the player turns in degrees
-var direction = 0;
+var direction = 0
 
 func _ready():
 	set_process(true)
