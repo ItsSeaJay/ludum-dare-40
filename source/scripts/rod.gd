@@ -11,7 +11,9 @@ func _ready():
 	set_process(true)
 	pass
 
-func _process(delta):	
+func _process(delta):
+	update()
+	
 	if Input.is_action_pressed("fishing_rod") && !pressed:
 		if cast:
 			reel()
@@ -25,6 +27,13 @@ func _process(delta):
 		var line_slack = distance(bobber_instance.get_pos(), get_global_pos())
 		if line_slack >= max_slack:
 			reel()
+
+func _draw():
+	var inv = get_global_transform().inverse()
+	draw_set_transform(inv.get_origin(), inv.get_rotation(), inv.get_scale())
+	
+	if cast:
+		draw_line(get_global_pos(), bobber_instance.get_global_pos(), Color(0, 0, 0), 1)
 
 func cast():
 	bobber_instance.set_pos(get_global_mouse_pos())
