@@ -5,24 +5,29 @@ var current_state = states.normal
 var ocean
 var bobber = load("res://scenes/Bobber.xml")
 var max_speed = rand_range(8, 16)
-var velocity = 0
 var drag = 0.1
+var velocity
+var torque = 1
+var direction = 0
 
 func _ready():
 	ocean = get_node("../../Ocean")
-	velocity = max_speed
 	set_process(true)
 
 func _process(delta):
-	handle_state(current_state)
+	handle_state(current_state, delta)
 	screen_wrap()
-	translate(Vector2(sin(get_rot()) * velocity, cos(get_rot()) * velocity) * delta)
+	
 	velocity = max(0, velocity - drag)
+	
+	set_rotd(direction)
 func _draw():
 	pass
 
-func handle_state(state):
+func handle_state(state, delta):
 	if current_state == states.normal:
+		velocity = max_speed
+		swim(delta)
 		pass
 	elif current_state == states.scared:
 		pass
@@ -32,6 +37,17 @@ func handle_state(state):
 		pass
 	else:
 		pass
+
+func swim(delta):
+	translate(Vector2(sin(get_rot()) * velocity, cos(get_rot()) * velocity) * delta)
+
+func turn_left(amount):
+	direction += amount
+	pass
+
+func turn_right(amount):
+	direction -= amount
+	pass
 
 func screen_wrap():
 	if (get_pos().x > ocean.get("bounds").x):
