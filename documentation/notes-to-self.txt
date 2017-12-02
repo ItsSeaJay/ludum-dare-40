@@ -1,0 +1,3 @@
+Notes to self:
+
+  - In Godot, ensure that all sprites are facing left using a top-down perspective.
