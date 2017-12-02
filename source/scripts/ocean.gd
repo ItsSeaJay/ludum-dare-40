@@ -5,13 +5,10 @@ var ocean_size = Vector2(2, 2)
 var tile_size = Vector2(16, 16)
 
 func _ready():
-	#for i in range(ocean_size.x):
-	#	for j in range(ocean_size.y):
-	#		print("Stamp!")
-	#		var instance = water_tile.instance()
-	#		instance.set_pos(Vector2(i, j))
-	#		add_child(water_tile, false)
-	
-	var instance = water_tile.instance()
-	add_child(water_tile)
+	for x in range(ocean_size.x):
+		for y in range(ocean_size.y):
+			print("Stamp!")
+			var instance = water_tile.instance()
+			instance.set_pos(Vector2(x * tile_size.x, y * tile_size.y))
+			add_child(instance, false)
 	pass
