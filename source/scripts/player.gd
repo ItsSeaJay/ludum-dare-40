@@ -1,8 +1,8 @@
 extends Node2D
 
 var transform = get_transform()
-var speed = 0.33
-var torque = 3	# How far the player turns in degrees
+var speed = 32
+var torque = 4	# How far the player turns in degrees
 var direction = 0;
 
 func _ready():
@@ -11,7 +11,7 @@ func _ready():
 
 func _process(delta):
 	if Input.is_action_pressed("accelerate"):
-		accelerate()
+		accelerate(delta)
 	
 	if Input.is_action_pressed("turn_left"):
 		turn_left()
@@ -21,8 +21,8 @@ func _process(delta):
 	
 	set_rotd(direction)
 
-func accelerate():
-	translate(Vector2(speed, 0))
+func accelerate(delta):
+	translate(Vector2(sin(get_rot()) * speed, cos(get_rot()) * speed) * delta)
 
 func turn_left():
 	direction += torque
