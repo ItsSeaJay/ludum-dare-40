@@ -1,6 +1,7 @@
 extends Node2D
 
 var ocean
+var bobber = load("res://scenes/Bobber.xml")
 
 var speed = rand_range(8, 16)
 
