@@ -67,7 +67,7 @@
 				<int> -2 </int>
 				<resource  resource_type="SpriteFrames" path="local://1">  </resource>
 				<string> "default" </string>
-				<int> 6 </int>
+				<int> 1 </int>
 				<bool> True </bool>
 			</array>
 			<string> "version" </string>

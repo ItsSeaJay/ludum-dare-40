@@ -8,7 +8,8 @@ var max_speed = rand_range(8, 16)
 var drag = 0.128
 var velocity
 var torque = rand_range(1, 2)
-var forward_direction = 0
+var angle = 0
+var direction
 # AI
 var swim_timer = 0
 var max_swim_time = rand_range(4, 8)
@@ -30,7 +31,9 @@ func _process(delta):
 	
 	velocity = max(0, velocity - drag)
 	
-	set_rotd(forward_direction)
+	set_rotd(angle)
+	direction = Vector2(sin(angle), cos(angle))
+
 func _draw():
 	pass
 
@@ -40,7 +43,6 @@ func handle_state(state, delta):
 		velocity = max_speed
 		swim(delta)
 		swim_timer = max(0, swim_timer - delta)
-		
 		turn_randomly(delta)
 		pass
 	elif current_state == states.scared:
@@ -90,11 +92,11 @@ func randomise_turn_direction():
 	pass
 
 func turn_left(amount):
-	forward_direction += amount
+	angle += amount
 	pass
 
 func turn_right(amount):
-	forward_direction -= amount
+	angle -= amount
 	pass
 
 func screen_wrap():
