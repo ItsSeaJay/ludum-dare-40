@@ -25,9 +25,12 @@ var max_reset_timer = rand_range(0.128, 1)
 var player
 var player_instance
 
+var vision_cone
+
 func _ready():
 	ocean = get_node("../../Ocean")
 	player = get_node("../../Player")
+	vision_cone = get_node("VisionCone")
 	player_instance = player
 	
 	set_process(true)
@@ -53,10 +56,6 @@ func handle_state(state, delta):
 		swim(delta)
 		swim_timer = max(0, swim_timer - delta)
 		turn_randomly(delta)
-		
-		# Be wary of the player
-		if player_visible(fov, perception):
-			current_state = states.scared
 	elif current_state == states.scared:
 		# Flee from danger
 		pass
@@ -69,14 +68,20 @@ func handle_state(state, delta):
 	else:
 		pass
 
-func player_visible(fov, perception):
-	var difference = pos_angle_difference(direction, player.get_global_pos())
-	var distance
-	
-	if difference > -fov / 2 && difference < fov / 2:
+func player_visible(body):
+	if body in get_tree().get_nodes_in_group("player"):
 		return true
 	else:
 		return false
+
+#func player_visible(fov, perception):
+#	var difference = pos_angle_difference(direction, player.get_global_pos())
+#	var distance
+#	
+#	if difference > -fov / 2 && difference < fov / 2:
+#		return true
+#	else:
+#		return false
 
 func update_rotation():
 	set_rotd(angle)
