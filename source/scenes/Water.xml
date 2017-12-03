@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resource_file type="PackedScene" subresource_count="2" version="2.1" version_name="Godot Engine v2.1.4.stable.official">
-	<ext_resource path="res://graphics/water_tile.png" type="Texture" index="0"></ext_resource>
+	<ext_resource path="res://graphics/still_tropical_water_tile.png" type="Texture" index="0"></ext_resource>
 	<main_resource>
 		<dictionary name="_bundled" shared="false">
 			<string> "conn_count" </string>
@@ -29,7 +29,7 @@
 			<int_array  len="22"> 				-1, -1, 2, 0, -1, 1, 1, 0, 0, 0, 0, 3, 3, -1, 3, 4, 1, 5, 2, 6, 3, 0 </int_array>
 			<string> "variants" </string>
 			<array  len="4" shared="false">
-				<real> 0.64 </real>
+				<real> 0.32 </real>
 				<int> -1 </int>
 				<resource  external="0">  </resource>
 				<vector2> 8, 8 </vector2>

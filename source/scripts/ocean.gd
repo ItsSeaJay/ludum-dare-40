@@ -2,13 +2,13 @@ extends Node
 
 # Water
 var water_tile = load("res://scenes/Water.xml")
-var size = Vector2(64, 64)
+var size = Vector2(4, 4)
 var tile_size = Vector2(16, 16)
 var bounds = Vector2(size.x * tile_size.x, size.y * tile_size.y)
 
 # Fish
 var fish = load("res://scenes/Fish.xml")
-const fish_population = 128
+const fish_population = 1
 
 func _ready():
 	# Fill ocean with water and life	
