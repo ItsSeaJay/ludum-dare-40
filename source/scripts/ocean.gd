@@ -2,7 +2,7 @@ extends Node
 
 # Water
 var water_tile = load("res://scenes/Water.xml")
-var size = Vector2(4, 4)
+var size = Vector2(8, 8)
 var tile_size = Vector2(16, 16)
 var bounds = Vector2(size.x * tile_size.x, size.y * tile_size.y)
 

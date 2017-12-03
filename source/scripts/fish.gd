@@ -10,7 +10,7 @@ var velocity
 var torque = rand_range(1, 2)
 var angle = 0
 var direction
-var fov = 60
+var fov = 30
 var perception = 64
 # AI
 var swim_timer = 0
@@ -20,7 +20,7 @@ var turn_direction = turn.none
 var turn_timer = 0
 var max_turn_time = rand_range(0, 16)
 var reset_timer = 0
-var max_reset_timer = rand_range(.128, 1)
+var max_reset_timer = rand_range(0.128, 1)
 
 var player
 var player_instance
@@ -32,6 +32,8 @@ func _ready():
 	
 	set_process(true)
 	turn_timer = max_turn_time
+	
+	update_rotation()
 
 func _process(delta):
 	handle_state(current_state, delta)
@@ -57,7 +59,6 @@ func handle_state(state, delta):
 			current_state = states.scared
 	elif current_state == states.scared:
 		# Flee from danger
-		print("Scared")
 		pass
 	elif current_state == states.curious:
 		# Drawn towards the player's lure
@@ -69,9 +70,10 @@ func handle_state(state, delta):
 		pass
 
 func player_visible(fov, perception):
-	var difference = pos_angle_difference(get_global_pos(), player.get_global_pos())
+	var difference = pos_angle_difference(direction, player.get_global_pos())
+	var distance
 	
-	if difference > -fov && difference < fov:
+	if difference > -fov / 2 && difference < fov / 2:
 		return true
 	else:
 		return false
@@ -103,7 +105,6 @@ func turn_randomly(delta):
 			if (reset_timer <= 0):
 				swim_timer = max_swim_time
 				turn_direction = turn.none
-			pass
 
 func randomise_turn_direction():
 	var go = randi() % 2
@@ -120,6 +121,7 @@ func turn_right(amount):
 	angle -= amount
 	
 func pos_angle_difference(first, second):
+	print(acos(cosine(first, second)))
 	return acos(cosine(first, second))
 
 func cosine(first, second):
@@ -137,6 +139,9 @@ func magnitude(vector):
 
 func sqr(value):
 	return value * value
+
+func distance(first_pos, second_pos):
+	return sqrt(sqr(first_pos.x - second_pos.x) + sqr(first_pos.y - second_pos.y))
 
 func screen_wrap():
 	if (get_pos().x > ocean.get("bounds").x):
