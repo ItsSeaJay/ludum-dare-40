@@ -10,7 +10,7 @@ var velocity
 var torque = rand_range(1, 2)
 var angle = 0
 var direction
-var fov = 30
+var fov = 60
 var perception = 64
 # AI
 var swim_timer = 0
@@ -23,14 +23,13 @@ var reset_timer = 0
 var max_reset_timer = rand_range(0.128, 1)
 
 var player
+var player_pos_relative
+var direction_to_player
 var player_instance
-
-var vision_cone
 
 func _ready():
 	ocean = get_node("../../Ocean")
 	player = get_node("../../Player")
-	vision_cone = get_node("VisionCone")
 	player_instance = player
 	
 	set_process(true)
@@ -45,7 +44,9 @@ func _process(delta):
 	velocity = max(0, velocity - drag)
 	
 	update_rotation()
-
+	player_pos_relative = Vector2(player.get_pos().x - get_global_pos().x, player.get_pos().y - get_global_pos().y)
+	direction_to_player = Vector2(sin(player_pos_relative.x), cos(player_pos_relative.y))
+	print(direction_to_player.x, " ", direction_to_player.y)
 func _draw():
 	pass
 
@@ -68,11 +69,11 @@ func handle_state(state, delta):
 	else:
 		pass
 
-func player_visible(body):
-	if body in get_tree().get_nodes_in_group("player"):
-		return true
-	else:
-		return false
+#func player_visible(body):
+#	if body in get_tree().get_nodes_in_group("player"):
+#		return true
+#	else:
+#		return false
 
 #func player_visible(fov, perception):
 #	var difference = pos_angle_difference(direction, player.get_global_pos())
@@ -85,10 +86,13 @@ func player_visible(body):
 
 func update_rotation():
 	set_rotd(angle)
-	direction = Vector2(sin(angle), cos(angle))
+	direction = Vector2(sin(angle), cos(angle)).normalized()
 
 func swim(delta):
+	var d = direction_to_player
+	#translate(d * delta)
 	translate(Vector2(sin(get_rot()) * velocity, cos(get_rot()) * velocity) * delta)
+	#translate(Vector2(direction.x * velocity, direction.y * velocity) * delta)
 
 func turn_randomly(delta):
 	if swim_timer <= 0:
@@ -126,7 +130,6 @@ func turn_right(amount):
 	angle -= amount
 	
 func pos_angle_difference(first, second):
-	print(acos(cosine(first, second)))
 	return acos(cosine(first, second))
 
 func cosine(first, second):
