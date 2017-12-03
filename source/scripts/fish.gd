@@ -10,6 +10,7 @@ var velocity
 var torque = rand_range(1, 2)
 var angle = 0
 var direction
+var fov = 60
 # AI
 var swim_timer = 0
 var max_swim_time = rand_range(4, 8)
@@ -19,9 +20,11 @@ var turn_timer = 0
 var max_turn_time = rand_range(0, 16)
 var reset_timer = 0
 var max_reset_timer = rand_range(.128, 1)
+var player
 
 func _ready():
 	ocean = get_node("../../Ocean")
+	player = get_node("../../Player")
 	set_process(true)
 	turn_timer = max_turn_time
 
@@ -31,8 +34,7 @@ func _process(delta):
 	
 	velocity = max(0, velocity - drag)
 	
-	set_rotd(angle)
-	direction = Vector2(sin(angle), cos(angle))
+	update_rotation()
 
 func _draw():
 	pass
@@ -44,6 +46,9 @@ func handle_state(state, delta):
 		swim(delta)
 		swim_timer = max(0, swim_timer - delta)
 		turn_randomly(delta)
+		
+		if player_visible(fov):
+			print("Player Spotted!")
 		pass
 	elif current_state == states.scared:
 		# Flee from danger
@@ -56,6 +61,18 @@ func handle_state(state, delta):
 		pass
 	else:
 		pass
+
+func player_visible(fov):
+	var difference = pos_angle_difference(get_pos(), player.get_pos())
+	
+	if difference > -fov && difference < fov:
+		print("Player Sighted")
+		pass
+	pass
+
+func update_rotation():
+	set_rotd(angle)
+	direction = Vector2(sin(angle), cos(angle))
 
 func swim(delta):
 	translate(Vector2(sin(get_rot()) * velocity, cos(get_rot()) * velocity) * delta)
@@ -97,6 +114,26 @@ func turn_left(amount):
 
 func turn_right(amount):
 	angle -= amount
+	pass
+
+func pos_angle_difference(first, second):
+	return acos(cosine(first, second))
+	pass
+
+func cosine(first, second):
+	return (dot_product(first, second)) / (dot_product(magnitude(first), magnitude(second)))
+	pass
+
+func dot_product(first, second):
+	return (first.x * first.y) + (second.x * second.y)
+	pass
+
+func magnitude(vector):
+	return sqrt((sqr(vector)) + (sqr(vector)))
+	pass
+
+func sqr(value):
+	return value * value
 	pass
 
 func screen_wrap():
