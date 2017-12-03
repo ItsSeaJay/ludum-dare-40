@@ -11,6 +11,7 @@ var torque = rand_range(1, 2)
 var angle = 0
 var direction
 var fov = 60
+var perception = 64
 # AI
 var swim_timer = 0
 var max_swim_time = rand_range(4, 8)
@@ -20,11 +21,15 @@ var turn_timer = 0
 var max_turn_time = rand_range(0, 16)
 var reset_timer = 0
 var max_reset_timer = rand_range(.128, 1)
+
 var player
+var player_instance
 
 func _ready():
 	ocean = get_node("../../Ocean")
 	player = get_node("../../Player")
+	player_instance = player
+	
 	set_process(true)
 	turn_timer = max_turn_time
 
@@ -47,11 +52,12 @@ func handle_state(state, delta):
 		swim_timer = max(0, swim_timer - delta)
 		turn_randomly(delta)
 		
-		if player_visible(fov):
-			print("Player Spotted!")
-		pass
+		# Be wary of the player
+		if player_visible(fov, perception):
+			current_state = states.scared
 	elif current_state == states.scared:
 		# Flee from danger
+		print("Scared")
 		pass
 	elif current_state == states.curious:
 		# Drawn towards the player's lure
@@ -62,13 +68,13 @@ func handle_state(state, delta):
 	else:
 		pass
 
-func player_visible(fov):
-	var difference = pos_angle_difference(get_pos(), player.get_pos())
+func player_visible(fov, perception):
+	var difference = pos_angle_difference(get_global_pos(), player.get_global_pos())
 	
 	if difference > -fov && difference < fov:
-		print("Player Sighted")
-		pass
-	pass
+		return true
+	else:
+		return false
 
 func update_rotation():
 	set_rotd(angle)
@@ -106,35 +112,31 @@ func randomise_turn_direction():
 		return turn.left
 	else:
 		return turn.right
-	pass
 
 func turn_left(amount):
 	angle += amount
-	pass
 
 func turn_right(amount):
 	angle -= amount
-	pass
-
+	
 func pos_angle_difference(first, second):
 	return acos(cosine(first, second))
-	pass
 
 func cosine(first, second):
-	return (dot_product(first, second)) / (dot_product(magnitude(first), magnitude(second)))
-	pass
+	return (dot_product(first, second)) / (magnitude(first) * magnitude(second))
+
+func vector_multiply(first, second):
+	return Vector2(first.x * second.x, first.y * second.y)
+	return
 
 func dot_product(first, second):
 	return (first.x * first.y) + (second.x * second.y)
-	pass
 
 func magnitude(vector):
-	return sqrt((sqr(vector)) + (sqr(vector)))
-	pass
+	return sqrt((sqr(vector.x)) + (sqr(vector.y)))
 
 func sqr(value):
 	return value * value
-	pass
 
 func screen_wrap():
 	if (get_pos().x > ocean.get("bounds").x):
